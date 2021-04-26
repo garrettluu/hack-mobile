@@ -104,6 +104,10 @@ class _MyHomePageState extends State<MyHomePage> {
             TaskWidget(
                 title: "Watch CSE 120 Lectures",
                 description: "Catch up on any missed lectures"),
+            TaskWidget(
+              title: "Finish CSE 142L Lab",
+              description: "This will take a long time!",
+            )
           ],
         ),
       ),
