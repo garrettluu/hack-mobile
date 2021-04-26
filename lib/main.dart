@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackmobile/widgets/Task.dart';
 
 void main() {
   runApp(MyApp());
@@ -93,13 +94,16 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            // Text(
+            //   'You have pushed the button this many times:',
+            // ),
+            // Text(
+            //   '$_counter',
+            //   style: Theme.of(context).textTheme.headline4,
+            // ),
+            TaskWidget(
+                title: "Watch CSE 120 Lectures",
+                description: "Catch up on any missed lectures"),
           ],
         ),
       ),
