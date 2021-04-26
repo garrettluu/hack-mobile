@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Hack Mobile'),
     );
   }
 }
@@ -47,16 +47,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List<TaskWidget> _tasks = [];
 
-  void _incrementCounter() {
+  void _addTask() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _tasks.add(TaskWidget(
+        title: "New task!",
+        description: "New Description!",
+      ));
     });
   }
 
@@ -94,26 +92,26 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Text(
-            //   'You have pushed the button this many times:',
-            // ),
-            // Text(
-            //   '$_counter',
-            //   style: Theme.of(context).textTheme.headline4,
-            // ),
-            TaskWidget(
-                title: "Watch CSE 120 Lectures",
-                description: "Catch up on any missed lectures"),
-            TaskWidget(
-              title: "Finish CSE 142L Lab",
-              description: "This will take a long time!",
-            )
+            Text(
+              "Hello, world!",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 24),
+            ),
+            SizedBox(height: 24),
+            // TaskWidget(
+            //     title: "Watch CSE 120 Lectures",
+            //     description: "Catch up on any missed lectures"),
+            // TaskWidget(
+            //   title: "Finish CSE 142L Lab",
+            //   description: "This will take a long time!",
+            // )
+            ..._tasks
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: _addTask,
+        tooltip: 'Add Task',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
