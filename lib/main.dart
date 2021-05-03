@@ -53,6 +53,25 @@ class _MyHomePageState extends State<MyHomePage> {
             _tasks.removeWhere((element) => (element.key == newTask.key));
           });
         },
+        onLongPress: () async {
+          final changedTask = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditTask(
+                screenTitle: "Edit Task",
+                key: newTask.key,
+                title: newTask.title,
+                description: newTask.description,
+              ),
+            ),
+          );
+          setState(() {
+            // Remove the old task
+            _tasks.removeWhere((element) => (element.key == changedTask.key));
+            // Create a new one
+            _addTask(changedTask);
+          });
+        },
       ));
     });
   }

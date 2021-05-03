@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hackmobile/widgets/Task.dart';
 
 class EditTask extends StatefulWidget {
-  EditTask({Key key, this.screenTitle}) : super(key: key);
+  EditTask({Key key, this.screenTitle, this.title, this.description})
+      : super(key: key);
   final String screenTitle;
+  final String title;
+  final String description;
 
   @override
   _EditTaskState createState() => _EditTaskState();
@@ -12,6 +15,13 @@ class EditTask extends StatefulWidget {
 class _EditTaskState extends State<EditTask> {
   final controllerName = TextEditingController();
   final controllerDescription = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    controllerName.text = widget.title;
+    controllerDescription.text = widget.description;
+  }
 
   @override
   void dispose() {
@@ -57,7 +67,7 @@ class _EditTaskState extends State<EditTask> {
             Navigator.pop(
               context,
               Task(
-                key: UniqueKey(),
+                key: widget.key ?? UniqueKey(),
                 title: controllerName.text,
                 description: controllerDescription.text,
               ),
