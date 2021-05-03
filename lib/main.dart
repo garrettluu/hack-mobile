@@ -76,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // in the middle of the parent.
         child: ListView(
           children: <Widget>[
+            SizedBox(height: 24),
             Text(
               "Hello, world!",
               textAlign: TextAlign.center,

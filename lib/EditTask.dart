@@ -25,27 +25,32 @@ class _EditTaskState extends State<EditTask> {
     return Container(
       child: Scaffold(
         appBar: AppBar(title: Text(widget.screenTitle)),
-        body: Column(
-          children: [
-            Row(
-              children: [
-                Icon(Icons.check),
-                Text("Task name"),
-              ],
-            ),
-            TextField(
-              controller: controllerName,
-            ),
-            Row(
-              children: [
-                Icon(Icons.subject),
-                Text("Description"),
-              ],
-            ),
-            TextField(
-              controller: controllerDescription,
-            ),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.only(top: 24, left: 48, right: 48),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.check),
+                  Text("Task name"),
+                ],
+              ),
+              TextField(
+                controller: controllerName,
+              ),
+              SizedBox(height: 32),
+              Row(
+                children: [
+                  Icon(Icons.subject),
+                  Text("Description"),
+                ],
+              ),
+              TextField(
+                controller: controllerDescription,
+              ),
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
