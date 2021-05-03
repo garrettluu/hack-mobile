@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackmobile/EditTask.dart';
 import 'package:hackmobile/widgets/Task.dart';
 
 void main() {
@@ -12,15 +13,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.amber,
       ),
       home: MyHomePage(title: 'Hack Mobile'),
@@ -49,12 +41,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<TaskWidget> _tasks = [];
 
-  void _addTask() {
+  void _addTask(TaskWidget newTask) {
     setState(() {
-      _tasks.add(TaskWidget(
-        title: "Ketchup is delicious.",
-        description: "Pinapple on pizza is not delicious",
-      ));
+      _tasks.add(newTask);
     });
   }
 
@@ -88,7 +77,15 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addTask,
+        onPressed: () async {
+          final newTask = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditTask(screenTitle: "New Task"),
+            ),
+          );
+          _addTask(newTask);
+        },
         tooltip: 'Add Task',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
