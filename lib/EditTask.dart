@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hackmobile/widgets/Task.dart';
 
 class EditTask extends StatefulWidget {
-  EditTask({Key key, this.screenTitle, this.title, this.description})
-      : super(key: key);
+  EditTask({Key key, this.screenTitle, this.task}) : super(key: key);
   final String screenTitle;
-  final String title;
-  final String description;
+  final Task task;
 
   @override
   _EditTaskState createState() => _EditTaskState();
@@ -19,8 +17,8 @@ class _EditTaskState extends State<EditTask> {
   @override
   void initState() {
     super.initState();
-    controllerName.text = widget.title;
-    controllerDescription.text = widget.description;
+    controllerName.text = widget.task?.title ?? "";
+    controllerDescription.text = widget.task?.description ?? "";
   }
 
   @override
@@ -64,13 +62,18 @@ class _EditTaskState extends State<EditTask> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
+            if (widget.task != null) {
+              widget.task.title = controllerName.text;
+              widget.task.description = controllerDescription.text;
+            }
             Navigator.pop(
               context,
-              Task(
-                key: widget.key ?? UniqueKey(),
-                title: controllerName.text,
-                description: controllerDescription.text,
-              ),
+              widget.task ??
+                  Task(
+                    key: UniqueKey(),
+                    title: controllerName.text,
+                    description: controllerDescription.text,
+                  ),
             );
           },
           child: Icon(Icons.send),

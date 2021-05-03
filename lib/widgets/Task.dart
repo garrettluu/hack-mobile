@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hackmobile/EditTask.dart';
 
 class Task {
-  const Task({this.key, this.title, this.description});
+  Task({this.key, this.title, this.description});
   final Key key;
-  final String title;
-  final String description;
+  String title;
+  String description;
 }
 
 class TaskWidget extends StatelessWidget {

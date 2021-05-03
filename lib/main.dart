@@ -39,40 +39,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<TaskWidget> _tasks = [];
+  List<Task> _tasks = [];
   // List<TaskWidget> _taskWidgets = [];
 
   void _addTask(Task newTask) {
     setState(() {
-      _tasks.add(TaskWidget(
-        key: newTask.key,
-        title: newTask.title,
-        description: newTask.description,
-        onDismissed: (direction) {
-          setState(() {
-            _tasks.removeWhere((element) => (element.key == newTask.key));
-          });
-        },
-        onLongPress: () async {
-          final changedTask = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EditTask(
-                screenTitle: "Edit Task",
-                key: newTask.key,
-                title: newTask.title,
-                description: newTask.description,
-              ),
-            ),
-          );
-          setState(() {
-            // Remove the old task
-            _tasks.removeWhere((element) => (element.key == changedTask.key));
-            // Create a new one
-            _addTask(changedTask);
-          });
-        },
-      ));
+      _tasks.add(newTask);
     });
   }
 
@@ -93,18 +65,64 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: ListView(
+        child: ListView.builder(
           primary: false,
-          children: <Widget>[
-            SizedBox(height: 24),
-            Text(
-              "Hello, world!",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24),
-            ),
-            SizedBox(height: 24),
-            ..._tasks
-          ],
+          itemCount: _tasks.length,
+          itemBuilder: (BuildContext context, int index) {
+            print(_tasks);
+            if (_tasks[index] != null) {
+              final currentWidget = TaskWidget(
+                key: _tasks[index].key,
+                title: _tasks[index].title,
+                description: _tasks[index].description,
+                onDismissed: (direction) {
+                  setState(() {
+                    _tasks.removeWhere(
+                        (element) => (element.key == _tasks[index].key));
+                  });
+                },
+                onLongPress: () async {
+                  final newTask = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditTask(
+                          screenTitle: "New Task", task: _tasks[index]),
+                    ),
+                  );
+                  setState(() {
+                    _tasks[index] = newTask;
+                  });
+                },
+              );
+              if (index == 0) {
+                return Column(
+                  children: <Widget>[
+                    SizedBox(height: 24),
+                    Text(
+                      "Hello, world!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    SizedBox(height: 24),
+                    currentWidget,
+                  ],
+                );
+              }
+              return currentWidget;
+            }
+
+            return Column(
+              children: <Widget>[
+                SizedBox(height: 24),
+                Text(
+                  "Hello, world!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 24),
+                ),
+                SizedBox(height: 24),
+              ],
+            );
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(
