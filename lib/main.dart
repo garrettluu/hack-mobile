@@ -69,7 +69,6 @@ class _MyHomePageState extends State<MyHomePage> {
           primary: false,
           itemCount: _tasks.length,
           itemBuilder: (BuildContext context, int index) {
-            print(_tasks);
             if (_tasks[index] != null) {
               final currentWidget = TaskWidget(
                 key: _tasks[index].key,
