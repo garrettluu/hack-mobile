@@ -67,8 +67,22 @@ class _MyHomePageState extends State<MyHomePage> {
         // in the middle of the parent.
         child: ListView.builder(
           primary: false,
-          itemCount: _tasks.length,
+          itemCount: _tasks == null ? 1 : _tasks.length + 1,
           itemBuilder: (BuildContext context, int index) {
+            if (index == 0) {
+              return Column(
+                children: <Widget>[
+                  SizedBox(height: 24),
+                  Text(
+                    "Hello, world!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  SizedBox(height: 24),
+                ],
+              );
+            }
+            index -= 1;
             if (_tasks[index] != null) {
               final currentWidget = TaskWidget(
                 key: _tasks[index].key,
@@ -93,34 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                 },
               );
-              if (index == 0) {
-                return Column(
-                  children: <Widget>[
-                    SizedBox(height: 24),
-                    Text(
-                      "Hello, world!",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 24),
-                    ),
-                    SizedBox(height: 24),
-                    currentWidget,
-                  ],
-                );
-              }
               return currentWidget;
             }
-
-            return Column(
-              children: <Widget>[
-                SizedBox(height: 24),
-                Text(
-                  "Hello, world!",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 24),
-                ),
-                SizedBox(height: 24),
-              ],
-            );
+            return null;
           },
         ),
       ),
