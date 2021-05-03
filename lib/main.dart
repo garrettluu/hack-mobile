@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.amber,
       ),
       home: MyHomePage(title: 'Hack Mobile'),
     );
@@ -52,8 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void _addTask() {
     setState(() {
       _tasks.add(TaskWidget(
-        title: "New task!",
-        description: "New Description!",
+        title: "Ketchup is delicious.",
+        description: "Pinapple on pizza is not delicious",
       ));
     });
   }
