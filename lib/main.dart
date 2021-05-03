@@ -40,10 +40,20 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<TaskWidget> _tasks = [];
+  // List<TaskWidget> _taskWidgets = [];
 
-  void _addTask(TaskWidget newTask) {
+  void _addTask(Task newTask) {
     setState(() {
-      _tasks.add(newTask);
+      _tasks.add(TaskWidget(
+        key: newTask.key,
+        title: newTask.title,
+        description: newTask.description,
+        onDismissed: (direction) {
+          setState(() {
+            _tasks.removeWhere((element) => (element.key == newTask.key));
+          });
+        },
+      ));
     });
   }
 

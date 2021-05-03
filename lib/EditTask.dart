@@ -51,7 +51,8 @@ class _EditTaskState extends State<EditTask> {
           onPressed: () {
             Navigator.pop(
               context,
-              TaskWidget(
+              Task(
+                key: UniqueKey(),
                 title: controllerName.text,
                 description: controllerDescription.text,
               ),
