@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackmobile/EditTask.dart';
 import 'package:hackmobile/widgets/Task.dart';
 
 void main() {
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.amber,
       ),
       home: MyHomePage(title: 'Hack Mobile'),
+      // home: EditTask(
+      //   screenTitle: "I like Flutter",
+      // ),
     );
   }
 }
@@ -47,14 +51,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<TaskWidget> _tasks = [];
+  List<Task> _tasks = [];
 
-  void _addTask() {
+  void _addTask(Task newTask) {
     setState(() {
-      _tasks.add(TaskWidget(
-        title: "Ketchup is delicious.",
-        description: "Pinapple on pizza is not delicious",
-      ));
+      _tasks.add(newTask);
     });
   }
 
@@ -75,20 +76,75 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: ListView(
-          children: <Widget>[
-            Text(
-              "Hello, world!",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24),
+        child: ListView.builder(
+            primary: false,
+            itemCount: _tasks == null ? 1 : _tasks.length + 1,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == 0) {
+                return Column(
+                  children: <Widget>[
+                    SizedBox(height: 24),
+                    Text(
+                      "Hello, world!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    SizedBox(height: 24),
+                  ],
+                );
+              }
+              index -= 1;
+              if (_tasks[index] != null) {
+                final currentWidget = TaskWidget(
+                    key: _tasks[index].key,
+                    title: _tasks[index].title,
+                    description: _tasks[index].description,
+                    onDismissed: (direction) {
+                      setState(() {
+                        _tasks.removeWhere(
+                            (element) => (element.key == _tasks[index].key));
+                      });
+                    },
+                    onLongPress: () async {
+                      final changedTask = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => EditTask(
+                                screenTitle: "Edit Task", task: _tasks[index])),
+                      );
+                      setState(() {
+                        _tasks[index] = changedTask;
+                      });
+                    });
+                return currentWidget;
+              }
+
+              return null;
+            }
+            // children: <Widget>[
+            //   SizedBox(height: 24),
+            //   Text(
+            //     "Hello, world!",
+            //     textAlign: TextAlign.center,
+            //     style: TextStyle(fontSize: 24),
+            //   ),
+            //   SizedBox(height: 24),
+            // ],
             ),
-            SizedBox(height: 24),
-            ..._tasks
-          ],
-        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addTask,
+        onPressed: () async {
+          final newTask = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditTask(
+                screenTitle: "New task",
+              ),
+            ),
+          );
+
+          _addTask(newTask);
+        },
         tooltip: 'Add Task',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
