@@ -1,17 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hackmobile/EditTask.dart';
+import 'package:hackmobile/services/AuthService.dart';
 import 'package:hackmobile/widgets/Task.dart';
 
 class FirebaseAdapter {
   FirebaseFirestore firestore;
   FirebaseAdapter(this.firestore);
 
-  getTasksFromUser() {
+  getTasksFromUser(User user) {
     return StreamBuilder<QuerySnapshot>(
       stream: firestore
           .collection('tasks')
-          // .where('user', isEqualTo: uid)
+          .where('user', isEqualTo: user.uid)
           .snapshots(),
       builder: (context, snapshot) {
         List<Task> _tasks = getTasksFromSnapshot(snapshot);
@@ -27,6 +29,13 @@ class FirebaseAdapter {
                     "Hello, world!",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 24),
+                  ),
+                  SizedBox(height: 24),
+                  IconButton(
+                    icon: Icon(Icons.logout),
+                    onPressed: () {
+                      authService.signOut();
+                    },
                   ),
                   SizedBox(height: 24),
                 ],
@@ -79,8 +88,9 @@ class FirebaseAdapter {
     firestore.collection('tasks').doc(id).delete();
   }
 
-  createTask(Task task) {
+  createTask(Task task, User user) {
     firestore.collection('tasks').doc(task.key).set(<String, dynamic>{
+      'user': user.uid,
       'key': task.key,
       'title': task.title,
       'description': task.description,
@@ -88,7 +98,6 @@ class FirebaseAdapter {
   }
 
   updateTask(Task task) {
-    print(task.key);
     firestore.collection('tasks').doc(task.key).update(<String, dynamic>{
       'title': task.title,
       'description': task.description
