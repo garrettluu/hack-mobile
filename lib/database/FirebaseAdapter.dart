@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hackmobile/EditTask.dart';
-import 'package:hackmobile/services/AuthService.dart';
 import 'package:hackmobile/widgets/Task.dart';
 
 class FirebaseAdapter {

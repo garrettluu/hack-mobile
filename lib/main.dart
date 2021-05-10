@@ -77,14 +77,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // StreamBuilder<QuerySnapshot> _tasks;
-
-  @override
-  void initState() {
-    super.initState();
-    // _tasks = MyApp.firebase.getTasksFromUser(widget.user);
-  }
-
   @override
   Widget build(BuildContext context) {
     print(widget.user);
