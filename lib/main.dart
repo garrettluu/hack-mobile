@@ -1,21 +1,41 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hackmobile/EditTask.dart';
-import 'package:hackmobile/widgets/Task.dart';
+import 'package:hackmobile/database/FirebaseAdapter.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  static final FirebaseAdapter firebase =
+      new FirebaseAdapter(FirebaseFirestore.instance);
   // This widget is the root of your application.
   @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // Initialize firebase asynchronously
+  final Future<FirebaseApp> firebaseApp = Firebase.initializeApp();
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.amber,
-      ),
-      home: MyHomePage(title: 'Hack Mobile'),
+    // Wait until firebase finishes initializing to start the app
+    return FutureBuilder(
+      future: firebaseApp,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: Colors.amber,
+            ),
+            home: MyHomePage(title: 'Hack Mobile'),
+          );
+        }
+        return Text("Loading");
+      },
     );
   }
 }
@@ -39,14 +59,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Task> _tasks = [];
-  // List<TaskWidget> _taskWidgets = [];
-
-  void _addTask(Task newTask) {
-    setState(() {
-      _tasks.add(newTask);
-    });
-  }
+  StreamBuilder<QuerySnapshot> _tasks = MyApp.firebase.getTasksFromUser();
 
   @override
   Widget build(BuildContext context) {
@@ -65,53 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: ListView.builder(
-          primary: false,
-          itemCount: _tasks == null ? 1 : _tasks.length + 1,
-          itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
-              return Column(
-                children: <Widget>[
-                  SizedBox(height: 24),
-                  Text(
-                    "Hello, world!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  SizedBox(height: 24),
-                ],
-              );
-            }
-            index -= 1;
-            if (_tasks[index] != null) {
-              final currentWidget = TaskWidget(
-                key: _tasks[index].key,
-                title: _tasks[index].title,
-                description: _tasks[index].description,
-                onDismissed: (direction) {
-                  setState(() {
-                    _tasks.removeWhere(
-                        (element) => (element.key == _tasks[index].key));
-                  });
-                },
-                onLongPress: () async {
-                  final newTask = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditTask(
-                          screenTitle: "New Task", task: _tasks[index]),
-                    ),
-                  );
-                  setState(() {
-                    _tasks[index] = newTask;
-                  });
-                },
-              );
-              return currentWidget;
-            }
-            return null;
-          },
-        ),
+        child: _tasks,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -121,7 +88,9 @@ class _MyHomePageState extends State<MyHomePage> {
               builder: (context) => EditTask(screenTitle: "New Task"),
             ),
           );
-          _addTask(newTask);
+          if (newTask != null) {
+            MyApp.firebase.createTask(newTask);
+          }
         },
         tooltip: 'Add Task',
         child: Icon(Icons.add),

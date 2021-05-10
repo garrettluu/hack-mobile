@@ -70,7 +70,7 @@ class _EditTaskState extends State<EditTask> {
               context,
               widget.task ??
                   Task(
-                    key: UniqueKey(),
+                    key: UniqueKey().toString(),
                     title: controllerName.text,
                     description: controllerDescription.text,
                   ),

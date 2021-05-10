@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Task {
   Task({this.key, this.title, this.description});
-  final Key key;
+  final String key;
   String title;
   String description;
 }
