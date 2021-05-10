@@ -12,11 +12,14 @@ class SignIn extends StatelessWidget {
         title: Text("Sign In"),
       ),
       body: Center(
-        child: SignInButton(
-          Buttons.Google,
-          onPressed: () {
-            authService.googleSignIn();
-          },
+        child: Container(
+          height: 64,
+          child: SignInButton(
+            Buttons.Google,
+            onPressed: () {
+              authService.googleSignIn();
+            },
+          ),
         ),
       ),
     );
