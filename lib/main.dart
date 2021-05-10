@@ -6,14 +6,13 @@ import 'package:hackmobile/EditTask.dart';
 import 'package:hackmobile/SignIn.dart';
 import 'package:hackmobile/database/FirebaseAdapter.dart';
 import 'package:hackmobile/services/AuthService.dart';
+import 'package:hackmobile/widgets/Task.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  static final FirebaseAdapter firebase =
-      new FirebaseAdapter(FirebaseFirestore.instance);
   // This widget is the root of your application.
   @override
   _MyAppState createState() => _MyAppState();
@@ -78,12 +77,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  StreamBuilder<QuerySnapshot> _tasks;
+  // StreamBuilder<QuerySnapshot> _tasks;
 
   @override
   void initState() {
     super.initState();
-    _tasks = MyApp.firebase.getTasksFromUser(widget.user);
+    // _tasks = MyApp.firebase.getTasksFromUser(widget.user);
   }
 
   @override
@@ -104,7 +103,62 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: _tasks,
+        child: StreamBuilder<QuerySnapshot>(
+          stream: firebase.getTasksFromUser(widget.user),
+          builder: (context, snapshot) {
+            List<Task> _tasks = firebase.getTasksFromSnapshot(snapshot);
+            return ListView.builder(
+              primary: false,
+              itemCount: _tasks == null ? 1 : _tasks.length + 1,
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return Column(
+                    children: <Widget>[
+                      SizedBox(height: 24),
+                      Text(
+                        "Hello, world!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      SizedBox(height: 24),
+                      IconButton(
+                        icon: Icon(Icons.logout),
+                        onPressed: () {
+                          authService.signOut();
+                        },
+                      ),
+                      SizedBox(height: 24),
+                    ],
+                  );
+                }
+                index -= 1;
+                if (_tasks[index] != null) {
+                  final currentWidget = TaskWidget(
+                    key: Key(_tasks[index].key),
+                    title: _tasks[index].title,
+                    description: _tasks[index].description,
+                    onDismissed: (direction) {
+                      firebase.deleteTask(_tasks[index].key.toString());
+                      _tasks.remove(_tasks[index]);
+                    },
+                    onLongPress: () async {
+                      final newTask = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditTask(
+                              screenTitle: "Edit Task", task: _tasks[index]),
+                        ),
+                      );
+                      firebase.updateTask(newTask);
+                    },
+                  );
+                  return currentWidget;
+                }
+                return null;
+              },
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -115,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           );
           if (newTask != null) {
-            MyApp.firebase.createTask(newTask, widget.user);
+            firebase.createTask(newTask, widget.user);
           }
         },
         tooltip: 'Add Task',
